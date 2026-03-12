@@ -5,7 +5,7 @@ import { sendMessage, deleteRoom, leaveRoom } from '../services/api';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import TokenDisplay from '../components/TokenDisplay';
-import { LogOut, AlertCircle, User, Users, Trash2, Info, X, Share2, Shield } from 'lucide-react';
+import { LogOut, User, Users, Trash2, Info, X, Share2, Shield, Activity } from 'lucide-react';
 
 const ChatRoom = () => {
   const { token } = useParams();
@@ -53,7 +53,7 @@ const ChatRoom = () => {
   };
 
   const handleTerminateSession = async () => {
-    if (window.confirm('WARNING: This will permanently expunge ALL messages and terminate the matrix for everyone. Proceed?')) {
+    if (window.confirm('CRITICAL ACTION: This will expunge ALL matrix data for all participants. Continue?')) {
       try {
         await deleteRoom(token);
       } catch (err) {
@@ -66,17 +66,17 @@ const ChatRoom = () => {
 
   const handleShare = async () => {
     const shareData = {
-        title: 'Noir Chat',
-        text: `Join my ${roomType} chat matrix on Noir Chat! Link: ${window.location.origin}`,
-        url: window.location.origin
+        title: 'Noir Chat Matrix',
+        text: `Secure dual-link established. Join: ${window.location.origin}/chat/${token}`,
+        url: `${window.location.origin}/chat/${token}`
     };
 
     try {
         if (navigator.share) {
             await navigator.share(shareData);
         } else {
-            navigator.clipboard.writeText(`Token: ${token}\nURL: ${window.location.origin}`);
-            alert('Link & Token copied to clipboard');
+            navigator.clipboard.writeText(`${window.location.origin}/chat/${token}`);
+            alert('Transmission link copied to clipboard.');
         }
     } catch (err) {
         console.error('Share failed:', err);
@@ -86,200 +86,199 @@ const ChatRoom = () => {
   if (!username) return null;
 
   return (
-    <div className="h-[100dvh] flex flex-col lg:flex-row bg-black text-white animate-fade-in font-outfit overflow-hidden">
+    <div className="h-[100dvh] bg-[#050504] flex flex-col lg:flex-row text-white animate-fade-in font-outfit overflow-hidden relative">
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-[400px] h-full bg-white/[0.015] blur-[150px] -z-10 hidden lg:block"></div>
+
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative overflow-hidden lg:border-r lg:border-white/5">
+      <div className="flex-1 flex flex-col relative overflow-hidden bg-transparent">
         {/* Header */}
-        <header className="h-[70px] lg:h-[90px] premium-glass border-b border-white/5 flex items-center justify-between px-4 lg:px-10 z-20">
-          <div className="flex items-center gap-4 lg:gap-6 shrink-0">
+        <header className="h-[80px] lg:h-[100px] border-b border-white/[0.03] backdrop-blur-3xl bg-black/20 flex items-center justify-between px-6 lg:px-12 z-20">
+          <div className="flex items-center gap-5 shrink-0">
             <div className="relative group">
-               <div className="absolute inset-0 bg-white/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative w-10 h-10 lg:w-12 lg:h-12 border border-white/10 rounded-[16px] flex items-center justify-center font-black text-sm lg:text-base bg-white/5 transition-all group-hover:border-white/30">
+              <div className="absolute inset-0 bg-white/5 blur-xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative w-12 h-12 border border-white/10 rounded-[18px] flex items-center justify-center font-black text-lg bg-black/40 transition-all group-hover:border-white/20">
                 {username.charAt(0).toUpperCase()}
               </div>
             </div>
             <div>
-              <div className="flex items-center gap-2 lg:gap-3">
-                <h2 className="text-xs lg:text-base font-black tracking-tight uppercase truncate max-w-[100px] lg:max-w-none">{username}</h2>
-                <span className="hidden xs:inline-block px-2.5 py-0.5 rounded-full bg-white/10 text-[8px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 border border-white/5">
-                  {roomType === 'private' ? 'Dual Link' : 'Multi Matrix'}
-                </span>
+              <div className="flex items-center gap-3">
+                <h2 className="text-sm lg:text-lg font-black tracking-tight uppercase truncate max-w-[120px] lg:max-w-none">{username}</h2>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                  <Activity className="w-3 h-3" />
+                  Live Sync
+                </div>
               </div>
-              <div className="flex items-center gap-1.5 lg:gap-2 text-[10px] lg:text-[12px] text-zinc-600 font-black uppercase tracking-[0.3em] mt-0.5">
-                <div className="w-1.5 h-1.5 bg-zinc-300 rounded-full animate-pulse shadow-[0_0_12px_rgba(255,255,255,0.8)]"></div>
-                Spectral Link
+              <div className="text-[10px] lg:text-[12px] text-zinc-600 font-black uppercase tracking-[0.3em] mt-1 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-pulse"></span>
+                {roomType === 'private' ? 'Encrypted Dual Link' : 'Open Multi-Matrix'}
               </div>
             </div>
           </div>
           
-          <div className="flex items-center gap-3 lg:gap-4">
+          <div className="flex items-center gap-3 lg:gap-5">
             <button
                 onClick={() => setShowMobileInfo(true)}
-                className="lg:hidden p-2.5 text-zinc-500 hover:text-white transition-all border border-white/5 rounded-xl bg-white/5"
+                className="lg:hidden w-11 h-11 flex items-center justify-center text-zinc-500 hover:text-white transition-all border border-white/5 rounded-xl bg-white/[0.03]"
             >
                 <Info className="w-5 h-5" />
             </button>
             <button
                 onClick={handleLeaveRoom}
-                className="hidden sm:flex items-center gap-2.5 px-6 py-3 text-[12px] font-black text-zinc-500 hover:text-white transition-all uppercase tracking-[0.2em] border border-white/5 hover:border-white/20 rounded-xl bg-white/5"
+                className="hidden sm:flex items-center gap-3 h-11 px-8 text-[11px] font-black text-zinc-500 hover:text-white transition-all uppercase tracking-[0.3em] border border-white/5 hover:border-white/20 rounded-xl bg-white/[0.03] active:scale-95"
             >
                 <LogOut className="w-4 h-4" />
-                <span className="hidden md:inline">Exit Matrix</span>
+                <span className="hidden md:inline">Disconnect</span>
             </button>
             <button
                 onClick={handleTerminateSession}
                 title="Purge Matrix"
-                className="p-2.5 lg:p-3 text-zinc-700 hover:text-red-500 transition-all border border-white/5 hover:border-red-500/20 rounded-xl bg-white/5 group"
+                className="w-11 h-11 flex items-center justify-center text-zinc-800 hover:text-red-500 transition-all border border-white/5 hover:border-red-500/20 rounded-xl bg-white/[0.03] group active:scale-95"
             >
-                <Trash2 className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                <Trash2 className="w-5 h-5 group-hover:rotate-6 transition-transform" />
             </button>
           </div>
         </header>
 
-        {/* Error Banner */}
+        {/* Global Error Banner */}
         {error && (
-          <div className="absolute top-[85px] lg:top-[100px] left-1/2 -translate-x-1/2 bg-red-500/10 border border-red-500/20 backdrop-blur-md px-6 py-2.5 rounded-full text-[12px] lg:text-[13px] text-red-400 font-black uppercase tracking-widest flex items-center gap-3 z-30 w-max max-w-[90%] shadow-2xl">
+          <div className="absolute top-28 lg:top-32 left-1/2 -translate-x-1/2 bg-red-500/10 border border-red-500/20 backdrop-blur-2xl px-8 py-3 rounded-full text-[12px] text-red-400 font-black uppercase tracking-[0.2em] flex items-center gap-3 z-30 shadow-3xl animate-fade-in max-w-[90%]">
             <Shield className="w-4 h-4 shrink-0" />
-            <span className="truncate">{error}</span>
+            {error}
           </div>
         )}
 
-        {/* Messages */}
-        <main className="flex-1 overflow-y-auto px-4 lg:px-12 py-8 lg:py-12 relative scroll-smooth">
+        {/* Message Interface */}
+        <main className="flex-1 overflow-y-auto px-6 lg:px-20 py-8 lg:py-16 relative scroll-smooth flex flex-col gap-8 scrollbar-hide">
           <MessageList messages={messages} currentUser={username} />
         </main>
         
-        {/* Input */}
-        <footer className="p-4 lg:p-8 premium-glass border-t border-white/5 z-20">
+        {/* Interaction Bar */}
+        <footer className="p-6 lg:p-10 border-t border-white/[0.03] bg-black/10 backdrop-blur-3xl z-20">
           <MessageInput onSendMessage={handleSendMessage} />
         </footer>
       </div>
 
-      {/* Info Sidebar (Desktop) / Drawer (Mobile) */}
-      
-      {/* Mobile Drawer Overlay */}
+      {/* MOBILE DRAWER */}
       {showMobileInfo && (
-          <div className="lg:hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col justify-end animate-fade-in" onClick={() => setShowMobileInfo(false)}>
+          <div className="lg:hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex flex-col justify-end animate-fade-in" onClick={() => setShowMobileInfo(false)}>
               <div 
-                className="bg-zinc-950 border-t border-white/10 rounded-t-[40px] p-10 lg:p-12 space-y-10 animate-slide-up shadow-[0_-20px_100px_rgba(0,0,0,1)]"
+                className="bg-zinc-950 border-t border-white/10 rounded-t-[50px] p-10 lg:p-16 space-y-12 animate-slide-up shadow-[0_-30px_100px_rgba(0,0,0,1)]"
                 onClick={e => e.stopPropagation()}
               >
-                  <div className="flex justify-between items-center">
-                      <h3 className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.4em]">Matrix Terminal</h3>
-                      <button onClick={() => setShowMobileInfo(false)} className="p-3 bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+                  <div className="flex justify-between items-center px-2">
+                      <h3 className="text-[11px] font-black text-zinc-700 uppercase tracking-[0.5em]">Session Data</h3>
+                      <button onClick={() => setShowMobileInfo(false)} className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-full text-zinc-500 hover:text-white transition-colors border border-white/5"><X className="w-5 h-5" /></button>
                   </div>
                   
                   <TokenDisplay token={token} />
 
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-2 gap-6">
                       <button 
                         onClick={handleShare}
-                        className="flex items-center justify-center gap-3 bg-white text-black h-[64px] rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] shadow-xl active:scale-95 transition-all"
+                        className="flex items-center justify-center gap-4 bg-white text-black h-[74px] rounded-3xl font-black uppercase text-[12px] tracking-[0.2em] shadow-3xl active:scale-[0.98] transition-all"
                       >
                           <Share2 className="w-5 h-5" />
                           Share
                       </button>
                       <button 
                          onClick={handleLeaveRoom}
-                         className="flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-zinc-400 h-[64px] rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] active:scale-95 transition-all"
+                         className="flex items-center justify-center gap-4 bg-white/[0.02] border border-white/10 text-zinc-600 h-[74px] rounded-3xl font-black uppercase text-[12px] tracking-[0.2em] active:scale-[0.98] transition-all hover:text-white hover:bg-white/[0.05]"
                       >
                           <LogOut className="w-5 h-5" />
                           Exit
                       </button>
                   </div>
 
-                  <div className="p-6 rounded-[28px] bg-white/[0.02] border border-white/5 flex items-center gap-5">
-                    {roomType === 'private' ? (
-                        <div className="w-12 h-12 rounded-[18px] bg-white/10 flex items-center justify-center text-white">
-                            <User className="w-6 h-6" />
-                        </div>
-                    ) : (
-                        <div className="w-12 h-12 rounded-[18px] bg-white/10 flex items-center justify-center text-white">
-                            <Users className="w-6 h-6" />
-                        </div>
-                    )}
+                  <div className="p-8 rounded-[35px] bg-white/[0.01] border border-white/5 flex items-center gap-6">
+                    <div className="w-14 h-14 rounded-[20px] bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
+                        {roomType === 'private' ? <User className="w-6 h-6" /> : <Users className="w-6 h-6" />}
+                    </div>
                     <div>
-                        <p className="text-[14px] font-black uppercase tracking-widest text-white">
+                        <p className="text-[14px] font-black uppercase tracking-[0.2em] text-zinc-200">
                             {roomType === 'private' ? 'Secure Dual Link' : 'Open Multi-Matrix'}
                         </p>
-                        <p className="text-[11px] text-zinc-500 uppercase font-bold tracking-tight mt-0.5 opacity-60">
-                            {roomType === 'private' ? 'Restricted to 2 unique entities' : 'No participant ceiling detected'}
+                        <p className="text-[10px] text-zinc-600 uppercase font-black tracking-[0.1em] mt-1 space-x-2">
+                            <span>Limit: {roomType === 'private' ? '2' : '∞'} entities</span>
+                            <span>•</span>
+                            <span className="text-zinc-500">Active</span>
                         </p>
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-white/5 text-center">
-                    <p className="text-[11px] text-zinc-700 font-bold uppercase tracking-[0.5em] opacity-40">
-                        Noir.Chat v1.1.0 — Absolute Privacy
+                <div className="pt-8 border-t border-white/[0.03] text-center">
+                    <p className="text-[11px] text-zinc-800 font-black uppercase tracking-[0.5em] opacity-60">
+                        Noir.Chat // Protocol 1.1 — Secure
                     </p>
                 </div>
               </div>
           </div>
       )}
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-[420px] flex-col bg-zinc-950 p-12 space-y-12 shadow-[inset_1px_0_0_rgba(255,255,255,0.05)]">
-        <div className="space-y-8">
-          <h3 className="text-[13px] font-black text-zinc-700 uppercase tracking-[0.5em]">Channel Matrix</h3>
-          <TokenDisplay token={token} />
+      {/* DESKTOP SIDEBAR */}
+      <aside className="hidden lg:flex w-[480px] flex-col bg-[#080807] p-16 space-y-16 border-l border-white/[0.02] backdrop-blur-3xl overflow-y-auto scrollbar-hide">
+        <div className="space-y-10">
+          <div className="space-y-3">
+             <h3 className="text-[11px] font-black text-zinc-700 uppercase tracking-[0.5em] ml-2">Channel Matrix</h3>
+             <TokenDisplay token={token} />
+          </div>
           
           <button 
             onClick={handleShare}
-            className="w-full flex items-center justify-center gap-4 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 text-white h-[64px] rounded-2xl font-black uppercase text-[12px] tracking-[0.3em] transition-all group"
+            className="w-full flex items-center justify-center gap-5 bg-white/[0.015] hover:bg-white/[0.03] border border-white/5 text-zinc-500 hover:text-white h-[74px] rounded-[30px] font-black uppercase text-[12px] tracking-[0.4em] transition-all group active:scale-[0.98]"
           >
-              <Share2 className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
+              <Share2 className="w-5 h-5 opacity-30 group-hover:opacity-100 transition-opacity" />
               Transmit Link
           </button>
 
-          <div className="p-6 rounded-[28px] bg-white/[0.02] border border-white/5 flex items-center gap-5">
-             {roomType === 'private' ? (
-                 <div className="w-12 h-12 rounded-[18px] bg-white/10 flex items-center justify-center text-white shadow-inner">
-                     <User className="w-6 h-6" />
-                 </div>
-             ) : (
-                 <div className="w-12 h-12 rounded-[18px] bg-white/10 flex items-center justify-center text-white shadow-inner">
-                     <Users className="w-6 h-6" />
-                 </div>
-             )}
+          <div className="p-8 rounded-[35px] bg-white/[0.01] border border-white/5 flex items-center gap-6 group hover:border-white/10 transition-colors cursor-default">
+             <div className="w-14 h-14 rounded-[20px] bg-white/[0.03] flex items-center justify-center text-zinc-600 group-hover:text-zinc-200 transition-colors shadow-inner">
+                 {roomType === 'private' ? <User className="w-6 h-6" /> : <Users className="w-6 h-6" />}
+             </div>
              <div>
-                 <p className="text-[14px] font-black uppercase tracking-widest text-white">
+                 <p className="text-[14px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-white transition-colors">
                      {roomType === 'private' ? 'Secure Dual Link' : 'Open Multi-Matrix'}
                  </p>
-                 <p className="text-[11px] text-zinc-500 uppercase font-bold tracking-tight mt-0.5 opacity-60">
-                     {roomType === 'private' ? 'Restricted to 2 entities' : 'Unlimited connectivity'}
+                 <p className="text-[11px] text-zinc-700 font-black uppercase tracking-widest mt-1 opacity-80">
+                     {roomType === 'private' ? 'Restricted Participants' : 'Unlimited Bandwidth'}
                  </p>
              </div>
           </div>
         </div>
 
-        <div className="space-y-10 flex-1 flex flex-col justify-end pb-4">
-          <div>
-            <h3 className="text-[12px] font-black text-zinc-700 uppercase tracking-[0.5em] mb-6">Security Protocol</h3>
-            <div className="p-8 rounded-[32px] bg-white/[0.015] border border-white/5 space-y-6">
-              <div className="flex items-start gap-5">
-                <div className="w-1.5 h-1.5 bg-zinc-600 rounded-full mt-2.5"></div>
-                <p className="text-[14px] text-zinc-500 font-light leading-relaxed tracking-wide">
-                  <span className="text-zinc-300 font-bold uppercase text-[11px] block mb-1">End-to-End Void</span>
-                  Messages exist only within the current temporal buffer.
-                </p>
+        <div className="flex-1 flex flex-col justify-end space-y-12">
+          <div className="space-y-8">
+            <h3 className="text-[11px] font-black text-zinc-800 uppercase tracking-[0.5em] ml-2">Security Protocol</h3>
+            <div className="p-10 rounded-[40px] bg-white/[0.01] border border-white/5 space-y-10">
+              <div className="flex items-start gap-6">
+                <div className="w-2 h-2 bg-zinc-800 rounded-full mt-2.5"></div>
+                <div className="space-y-2">
+                  <span className="text-zinc-500 font-black uppercase text-[11px] tracking-[0.2em] block">End-to-End Void</span>
+                  <p className="text-[14px] text-zinc-600 font-light leading-relaxed tracking-wider">
+                    Messages exist only within the current temporal buffer. No central database.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-start gap-5">
-                <div className="w-1.5 h-1.5 bg-zinc-600 rounded-full mt-2.5"></div>
-                <p className="text-[14px] text-zinc-500 font-light leading-relaxed tracking-wide">
-                  <span className="text-zinc-300 font-bold uppercase text-[11px] block mb-1">Zero persistence</span>
-                  Your identity and link will leave no trace once purged.
-                </p>
+              <div className="flex items-start gap-6">
+                <div className="w-2 h-2 bg-zinc-800 rounded-full mt-2.5"></div>
+                <div className="space-y-2">
+                  <span className="text-zinc-500 font-black uppercase text-[11px] tracking-[0.2em] block">Zero persistence</span>
+                  <p className="text-[14px] text-zinc-600 font-light leading-relaxed tracking-wider">
+                    Terminating the matrix expunges all cryptographic signatures.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-10 border-t border-white/5 flex items-center justify-between">
-            <p className="text-[11px] text-zinc-700 font-black uppercase tracking-[0.4em] flex items-center gap-3">
-              <div className="w-1.5 h-1.5 bg-zinc-800 rounded-full"></div>
-              Noir.Chat v1.1.0
+          <div className="pt-12 border-t border-white/[0.03] flex items-center justify-between px-2">
+            <p className="text-[11px] text-zinc-800 font-black uppercase tracking-[0.5em] flex items-center gap-3">
+              <span className="w-2 h-2 bg-zinc-900 rounded-full"></span>
+              P1.1 — Noir.Chat
             </p>
-            <div className="w-2 h-2 rounded-full bg-green-500/20 flex items-center justify-center">
-                <div className="w-1 h-1 rounded-full bg-green-500"></div>
+            <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+                <span className="text-[10px] text-zinc-700 font-black uppercase tracking-widest">Secure</span>
             </div>
           </div>
         </div>
@@ -289,4 +288,3 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
-
