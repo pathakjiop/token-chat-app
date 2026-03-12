@@ -9,8 +9,8 @@ const apiClient = axios.create({
   },
 });
 
-export const createRoom = async () => {
-  const response = await apiClient.post('/create-room');
+export const createRoom = async (type = 'group') => {
+  const response = await apiClient.post('/create-room', { type });
   return response.data;
 };
 
@@ -29,7 +29,13 @@ export const getMessages = async (token) => {
   return response.data;
 };
 
+export const leaveRoom = async (token, username) => {
+  const response = await apiClient.post('/leave-room', { token, username });
+  return response.data;
+};
+
 export const deleteRoom = async (token) => {
   const response = await apiClient.delete(`/room/${token}`);
   return response.data;
 };
+

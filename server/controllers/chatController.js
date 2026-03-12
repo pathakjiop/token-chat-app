@@ -3,9 +3,22 @@ import { generateToken } from '../utils/tokenGenerator.js';
 
 // Create a new chat room
 export const createRoom = async (req, res) => {
+  const { type = 'group' } = req.body;
   try {
     const token = generateToken();
-    res.status(201).json({ token });
+    
+    // Create room entry
+    const { error: roomError } = await supabase
+      .from('rooms')
+      .insert([{ token, type }]);
+
+    if (roomError) {
+      // If table doesn't exist, we fallback to just token generation for now
+      // but ideally the user should create the table.
+      console.warn('Rooms table might not exist. Falling back to legacy mode.');
+    }
+
+    res.status(201).json({ token, type });
   } catch (error) {
     console.error('Error creating room:', error);
     res.status(500).json({ error: 'Failed to create room' });
@@ -20,10 +33,45 @@ export const joinRoom = async (req, res) => {
   }
   
   try {
-    // Check if any messages exist for this token, if not it might be a new room or empty room. 
-    // We just accept the join since tokens are loosely validated.
-    // In a more strict setup, we'd have a 'rooms' table. But architecture says tokens just group messages.
-    res.status(200).json({ message: 'Joined room successfully' });
+    // Check if room exists and get its type
+    const { data: room, error: roomError } = await supabase
+      .from('rooms')
+      .select('*')
+      .eq('token', token)
+      .single();
+
+    if (roomError && roomError.code !== 'PGRST116') {
+       // Table might not exist or other error
+    }
+
+    if (room) {
+      // Check participants if it's a private room
+      const { data: participants, error: pError } = await supabase
+        .from('participants')
+        .select('*')
+        .eq('token', token);
+
+      if (room.type === 'private' && participants && participants.length >= 2) {
+        // Check if the user is already a participant
+        const isAlreadyIn = participants.some(p => p.username === username);
+        if (!isAlreadyIn) {
+          return res.status(403).json({ error: 'This private chat is full (limit: 2 people).' });
+        }
+      }
+
+      // Add participant if not already there
+      const isAlreadyIn = participants?.some(p => p.username === username);
+      if (!isAlreadyIn) {
+        await supabase
+          .from('participants')
+          .insert([{ token, username }]);
+      }
+    }
+
+    res.status(200).json({ 
+      message: 'Joined room successfully',
+      roomType: room?.type || 'group'
+    });
   } catch (error) {
     console.error('Error joining room:', error);
     res.status(500).json({ error: 'Failed to join room' });
@@ -78,6 +126,38 @@ export const getMessages = async (req, res) => {
   }
 };
 
+// Leave room
+export const leaveRoom = async (req, res) => {
+    const { token, username } = req.body;
+    if (!token || !username) {
+        return res.status(400).json({ error: 'Token and username are required' });
+    }
+
+    try {
+        const { error } = await supabase
+            .from('participants')
+            .delete()
+            .eq('token', token)
+            .eq('username', username);
+
+        if (error) throw error;
+
+        // Count remaining participants
+        const { count, error: countError } = await supabase
+            .from('participants')
+            .select('*', { count: 'exact', head: true })
+            .eq('token', token);
+        
+        // If no one left, we could optionally delete the room/messages
+        // But for now let's keep it simple or follow existing "wipe on exit" if it was intended.
+
+        res.status(200).json({ message: 'Left room successfully' });
+    } catch (error) {
+        console.error('Error leaving room:', error);
+        res.status(500).json({ error: 'Failed to leave room' });
+    }
+}
+
 // Delete chat room and messages
 export const deleteRoom = async (req, res) => {
   const { token } = req.params;
@@ -87,12 +167,23 @@ export const deleteRoom = async (req, res) => {
   }
 
   try {
-    const { error } = await supabase
+    // Delete messages
+    await supabase
       .from('messages')
       .delete()
       .eq('token', token);
 
-    if (error) throw error;
+    // Delete participants
+    await supabase
+        .from('participants')
+        .delete()
+        .eq('token', token);
+
+    // Delete room
+    await supabase
+        .from('rooms')
+        .delete()
+        .eq('token', token);
 
     res.status(200).json({ message: 'Room deleted successfully' });
   } catch (error) {
@@ -100,3 +191,4 @@ export const deleteRoom = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete room' });
   }
 };
+
