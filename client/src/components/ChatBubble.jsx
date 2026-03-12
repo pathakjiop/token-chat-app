@@ -2,28 +2,28 @@ import React from 'react';
 
 const ChatBubble = ({ message, isOwnMessage }) => {
   return (
-    <div className={`flex w-full mb-4 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex w-full ${isOwnMessage ? 'justify-end' : 'justify-start'} animate-fade-in`}>
       <div 
-        className={`max-w-[70%] rounded-2xl px-5 py-3 shadow-sm
+        className={`max-w-[80%] rounded-2xl px-6 py-4 transition-all duration-300
           ${isOwnMessage 
-            ? 'bg-blue-600 text-white rounded-br-none' 
-            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+            ? 'bg-white text-black font-medium selection:bg-black selection:text-white' 
+            : 'bg-zinc-950 text-zinc-300 border border-white/5 selection:bg-white selection:text-black'
           }`}
       >
         {!isOwnMessage && (
-          <div className="text-xs font-semibold text-gray-500 mb-1">
+          <div className="text-[10px] font-black text-zinc-500 mb-2 uppercase tracking-[0.2em]">
             {message.username}
           </div>
         )}
-        <div className="text-[15px] leading-relaxed break-words">
+        <div className="text-[14px] leading-relaxed break-words font-light tracking-wide">
           {message.message}
         </div>
         <div 
-          className={`text-[10px] mt-1.5 text-right
-            ${isOwnMessage ? 'text-blue-200' : 'text-gray-400'}
+          className={`text-[9px] mt-3 font-mono border-t pt-2
+            ${isOwnMessage ? 'text-zinc-400 border-black/5' : 'text-zinc-700 border-white/5 text-right'}
           `}
         >
-          {new Date(message.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {new Date(message.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
         </div>
       </div>
     </div>

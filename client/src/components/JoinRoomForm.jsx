@@ -12,41 +12,43 @@ const JoinRoomForm = ({ onJoin, isLoading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
-          Room Token
-        </label>
-        <input
-          id="token"
-          type="text"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="e.g. AB12CD"
-          className="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block px-4 py-3 uppercase tracking-wider transition-colors"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-          Username
-        </label>
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Choose a display name"
-          className="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block px-4 py-3 transition-colors"
-          required
-        />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div className="group">
+          <label htmlFor="token" className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+            Access Token
+          </label>
+          <input
+            id="token"
+            type="text"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="— — — — — —"
+            className="premium-input w-full h-[56px] rounded-2xl px-6 text-lg font-mono uppercase tracking-[0.2em] placeholder:text-zinc-700"
+            required
+          />
+        </div>
+        <div className="group">
+          <label htmlFor="username" className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+            Identity
+          </label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="ALIAS"
+            className="premium-input w-full h-[56px] rounded-2xl px-6 text-zinc-300 placeholder:text-zinc-700 font-light"
+            required
+          />
+        </div>
       </div>
       <button
         type="submit"
         disabled={isLoading || !token.trim() || !username.trim()}
-        className="w-full justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3.5 text-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="premium-button w-full h-[56px] rounded-2xl text-[13px] uppercase tracking-[0.2em] font-bold mt-4"
       >
-        {isLoading ? 'Joining...' : 'Join Room'}
+        {isLoading ? 'Decrypting...' : 'Enter the Void'}
       </button>
     </form>
   );

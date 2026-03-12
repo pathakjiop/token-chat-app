@@ -15,13 +15,8 @@ const Home = () => {
     setError('');
     try {
       const { token } = await createRoom();
-      // Auto join creator as 'Host' or prompt them for a name?
-      // Prompting for a name is better. Let's switch to join tab and set the token.
       setActiveTab('join');
-      // Pass the generated token to the input by using a ref or state
-      // Actually simpler: just give them the token and let them choose a username.
       alert(`Room created! Your token is: ${token}. Please enter a username to join.`);
-      // We could use an event or state to fill the token field, but for simplicity:
     } catch (err) {
       setError('Failed to create room. Please try again.');
     } finally {
@@ -43,38 +38,39 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-blue-600 p-8 text-center text-white">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-            <MessageSquarePlus className="w-8 h-8 text-white" />
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
+      <div className="w-full max-w-[420px] premium-glass rounded-[32px] overflow-hidden shadow-2xl">
+        <div className="p-10 text-center">
+          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+            <MessageSquarePlus className="w-10 h-10 text-black fill-current" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Temp Chat</h1>
-          <p className="text-blue-100 text-sm font-medium">Secure, temporary, history-free</p>
+          <h1 className="text-4xl font-bold tracking-tight mb-3 text-white">NOIR.CHAT</h1>
+          <p className="text-zinc-400 text-sm font-light tracking-widest uppercase">Ephemeral & Absolute</p>
         </div>
 
-        <div className="p-6">
-          <div className="flex space-x-2 mb-6 bg-gray-100 p-1 rounded-lg">
+        <div className="px-10 pb-10">
+          <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 mb-8">
             <button
               onClick={() => setActiveTab('join')}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'join' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-500 ${
+                activeTab === 'join' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'
               }`}
             >
-              Join Room
+              Join
             </button>
             <button
               onClick={() => setActiveTab('create')}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'create' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-500 ${
+                activeTab === 'create' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'
               }`}
             >
-              Create Room
+              Genesis
             </button>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+            <div className="mb-6 p-4 bg-red-500/10 text-red-400 text-xs rounded-xl border border-red-500/20 animate-fade-in flex items-center gap-3">
+              <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
               {error}
             </div>
           )}
@@ -83,24 +79,27 @@ const Home = () => {
             <JoinRoomForm onJoin={handleJoinRoom} isLoading={isLoading} />
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Generate a secure, random token to start a new private chat session. Hand this token to your peer.
+              <p className="text-zinc-400 mb-10 text-sm leading-relaxed font-light">
+                Generate a unique spectral token to initiate a void-encrypted workspace. All traces vanish upon exit.
               </p>
               <button
                 onClick={handleCreateRoom}
                 disabled={isLoading}
-                className="w-full justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3.5 text-center transition-colors disabled:opacity-50 flex items-center space-x-2"
+                className="premium-button w-full h-[56px] rounded-2xl flex items-center justify-center space-x-3"
               >
-                <span>{isLoading ? 'Creating...' : 'Generate New Room'}</span>
+                <div className="w-2 h-2 bg-black rounded-full animate-ping"></div>
+                <span>{isLoading ? 'Materializing...' : 'Initialize Session'}</span>
               </button>
             </div>
           )}
         </div>
       </div>
       
-      <p className="mt-8 text-center text-gray-400 text-sm">
-        Rooms and messages are deleted when the session ends.
-      </p>
+      <div className="mt-12 text-center opacity-40 hover:opacity-100 transition-opacity duration-700">
+        <p className="text-[10px] uppercase tracking-[0.3em] font-medium text-white/60">
+          Zero Persistence Architecture &bull; End-to-End Void
+        </p>
+      </div>
     </div>
   );
 };

@@ -13,23 +13,30 @@ const TokenDisplay = ({ token }) => {
   if (!token) return null;
 
   return (
-    <div className="bg-white px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-      <div>
-        <div className="text-xs text-gray-500 font-medium tracking-wide pb-1">ROOM TOKEN</div>
-        <div className="text-lg font-mono font-bold text-gray-800 tracking-wider">
-          {token}
+    <div className="premium-card rounded-[24px] p-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full"></div>
+          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Signal Origin</span>
+        </div>
+        {copied && (
+          <span className="text-[9px] font-bold text-white uppercase tracking-widest animate-pulse">Copied to HUD</span>
+        )}
+      </div>
+      <div 
+        onClick={copyToClipboard}
+        className="group relative cursor-pointer"
+      >
+        <div className="absolute inset-0 bg-white/5 blur-xl group-hover:bg-white/10 transition-all rounded-full"></div>
+        <div className="relative flex items-center justify-between bg-black/40 border border-white/10 rounded-2xl px-6 py-5 overflow-hidden">
+          <div className="text-2xl font-mono font-bold tracking-[0.2em] text-white">
+            {token}
+          </div>
+          <div className="text-zinc-500 group-hover:text-white transition-colors">
+            {copied ? <Check className="w-5 h-5 text-white" /> : <Copy className="w-5 h-5" />}
+          </div>
         </div>
       </div>
-      <button
-        onClick={copyToClipboard}
-        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center space-x-2"
-        title="Copy Token"
-      >
-        {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
-        <span className="text-sm font-medium hidden sm:block">
-          {copied ? 'Copied' : 'Copy Code'}
-        </span>
-      </button>
     </div>
   );
 };
