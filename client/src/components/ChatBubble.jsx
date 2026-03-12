@@ -11,15 +11,15 @@ const ChatBubble = ({ message, isOwnMessage }) => {
           }`}
       >
         {!isOwnMessage && (
-          <div className="text-[10px] font-black text-zinc-500 mb-2 uppercase tracking-[0.2em]">
+          <div className="text-[12px] font-black text-zinc-500 mb-2 uppercase tracking-[0.2em]">
             {message.username}
           </div>
         )}
-        <div className="text-[14px] leading-relaxed break-words font-light tracking-wide">
+        <div className="text-[15px] leading-relaxed break-words font-light tracking-wide">
           {message.message}
         </div>
         <div 
-          className={`text-[9px] mt-3 font-mono border-t pt-2
+          className={`text-[11px] mt-3 font-mono border-t pt-2
             ${isOwnMessage ? 'text-zinc-400 border-black/5' : 'text-zinc-700 border-white/5 text-right'}
           `}
         >

@@ -3,15 +3,15 @@
 
 @layer base {
   :root {
-    --bg-primary: #000000;
-    --bg-secondary: #0a0a0a;
-    --bg-tertiary: #171717;
-    --text-primary: #ffffff;
-    --text-secondary: #a1a1a1;
-    --text-muted: #525252;
-    --border-primary: rgba(255, 255, 255, 0.1);
-    --border-secondary: rgba(255, 255, 255, 0.05);
-    --accent-glow: rgba(255, 255, 255, 0.05);
+    --bg-primary: #050504;
+    --bg-secondary: #0d0d0c;
+    --bg-tertiary: #141413;
+    --text-primary: #FAF9F6;
+    --text-secondary: #d4d4d2;
+    --text-muted: #71716e;
+    --border-primary: rgba(250, 249, 246, 0.1);
+    --border-secondary: rgba(250, 249, 246, 0.05);
+    --accent-glow: rgba(250, 249, 246, 0.03);
   }
 
   body {

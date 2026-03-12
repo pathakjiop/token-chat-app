@@ -54,7 +54,7 @@ const Home = () => {
             <MessageSquarePlus className="w-10 h-10 text-black fill-current" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-3 text-white font-outfit uppercase">Noir Chat</h1>
-          <p className="text-zinc-400 text-[10px] font-black tracking-[0.3em] uppercase">Ephemeral Void Workspace</p>
+          <p className="text-zinc-400 text-[12px] font-black tracking-[0.3em] uppercase">Ephemeral Void Workspace</p>
         </div>
 
         <div className="px-10 pb-10 relative z-10">
@@ -93,7 +93,7 @@ const Home = () => {
               </p>
 
               <div className="space-y-4">
-                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-1">
+                <label className="block text-[12px] font-bold text-zinc-500 uppercase tracking-widest ml-1">
                   Matrix Configuration
                 </label>
                 <div className="grid grid-cols-2 gap-4">
@@ -106,8 +106,8 @@ const Home = () => {
                         }`}
                     >
                         <User className="w-5 h-5" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Private</span>
-                        <span className="text-[8px] opacity-40 uppercase tracking-tighter">Dual Sync Only</span>
+                        <span className="text-[12px] font-bold uppercase tracking-widest">Private</span>
+                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Dual Sync Only</span>
                     </button>
                     <button 
                         onClick={() => setRoomType('group')}
@@ -118,14 +118,14 @@ const Home = () => {
                         }`}
                     >
                         <Users className="w-5 h-5" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Group</span>
-                        <span className="text-[8px] opacity-40 uppercase tracking-tighter">Infinite Link</span>
+                        <span className="text-[12px] font-bold uppercase tracking-widest">Group</span>
+                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Infinite Link</span>
                     </button>
                 </div>
               </div>
               
               <div className="group">
-                <label className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+                <label className="block text-[12px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
                   Genesis Alias
                 </label>
                 <input
@@ -161,7 +161,7 @@ const Home = () => {
       </div>
       
       <div className="mt-12 text-center opacity-40 hover:opacity-100 transition-opacity duration-700">
-        <p className="text-[10px] uppercase tracking-[0.3em] font-medium text-white/60">
+        <p className="text-[12px] uppercase tracking-[0.3em] font-medium text-white/60">
           Zero Persistence Architecture &bull; End-to-End Void
         </p>
       </div>

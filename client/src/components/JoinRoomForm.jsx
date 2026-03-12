@@ -15,7 +15,7 @@ const JoinRoomForm = ({ onJoin, isLoading }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         <div className="group">
-          <label htmlFor="token" className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+          <label htmlFor="token" className="block text-[12px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
             Access Token
           </label>
           <input
@@ -29,7 +29,7 @@ const JoinRoomForm = ({ onJoin, isLoading }) => {
           />
         </div>
         <div className="group">
-          <label htmlFor="username" className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+          <label htmlFor="username" className="block text-[12px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
             Identity
           </label>
           <input

@@ -80,11 +80,11 @@ const ChatRoom = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold tracking-tight uppercase">{username}</h2>
-                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[8px] font-black uppercase tracking-widest text-zinc-400 border border-white/5">
+                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400 border border-white/5">
                   {roomType === 'private' ? 'Private' : 'Group'}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-[12px] text-zinc-500 font-bold uppercase tracking-widest">
                 <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
                 Active Link
               </div>
@@ -94,7 +94,7 @@ const ChatRoom = () => {
           <div className="flex items-center gap-3">
             <button
                 onClick={handleLeaveRoom}
-                className="flex items-center gap-2 px-6 py-2.5 text-[11px] font-bold text-zinc-400 hover:text-white transition-all uppercase tracking-widest border border-white/5 hover:border-white/20 rounded-[12px] bg-white/5"
+                className="flex items-center gap-2 px-6 py-2.5 text-[13px] font-bold text-zinc-400 hover:text-white transition-all uppercase tracking-widest border border-white/5 hover:border-white/20 rounded-[12px] bg-white/5"
             >
                 <LogOut className="w-3.5 h-3.5" />
                 Disconnect
@@ -111,7 +111,7 @@ const ChatRoom = () => {
 
         {/* Error Banner */}
         {error && (
-          <div className="absolute top-[90px] left-1/2 -translate-x-1/2 bg-red-500/10 border border-red-500/20 backdrop-blur-md px-6 py-2 rounded-full text-[11px] text-red-400 font-bold uppercase tracking-widest flex items-center gap-3 z-30">
+          <div className="absolute top-[90px] left-1/2 -translate-x-1/2 bg-red-500/10 border border-red-500/20 backdrop-blur-md px-6 py-2 rounded-full text-[13px] text-red-400 font-bold uppercase tracking-widest flex items-center gap-3 z-30">
             <AlertCircle className="w-3 h-3" />
             <span>Connection Desync: {error}</span>
           </div>
@@ -131,7 +131,7 @@ const ChatRoom = () => {
       {/* Sidebar - Desktop Only */}
       <aside className="hidden lg:flex w-[380px] flex-col bg-zinc-950 p-10 space-y-12">
         <div className="space-y-6">
-          <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.4em]">Channel Matrix</h3>
+          <h3 className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.4em]">Channel Matrix</h3>
           <TokenDisplay token={token} />
           <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-4">
              {roomType === 'private' ? (
@@ -144,10 +144,10 @@ const ChatRoom = () => {
                  </div>
              )}
              <div>
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-white">
+                 <p className="text-[12px] font-bold uppercase tracking-widest text-white">
                      {roomType === 'private' ? 'Secure Dual Link' : 'Open Multi-Matrix'}
                  </p>
-                 <p className="text-[8px] text-zinc-500 uppercase tracking-tighter">
+                 <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">
                      {roomType === 'private' ? 'Limited to 2 entities' : 'No participant ceiling'}
                  </p>
              </div>
@@ -156,17 +156,17 @@ const ChatRoom = () => {
 
         <div className="space-y-8">
           <div>
-            <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.4em] mb-4">Protocol</h3>
+            <h3 className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.4em] mb-4">Protocol</h3>
             <div className="p-6 rounded-[24px] bg-white/[0.02] border border-white/5 space-y-4">
               <div className="flex items-start gap-4">
                 <div className="w-1 h-1 bg-white rounded-full mt-2"></div>
-                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                <p className="text-[13px] text-zinc-400 font-light leading-relaxed">
                   End-to-End Void: Messages exist only in the current buffer.
                 </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-1 h-1 bg-white rounded-full mt-2"></div>
-                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                <p className="text-[13px] text-zinc-400 font-light leading-relaxed">
                   Ephemeral Identity: Your alias exists only for this duration.
                 </p>
               </div>
@@ -174,7 +174,7 @@ const ChatRoom = () => {
           </div>
 
           <div className="pt-8 border-t border-white/5">
-            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest flex items-center gap-2">
+            <p className="text-[12px] text-zinc-600 font-bold uppercase tracking-widest flex items-center gap-2">
               <div className="w-1 h-1 bg-zinc-700 rounded-full"></div>
               Noir.Chat v1.1.0 — Evolution
             </p>

@@ -19,9 +19,9 @@ const MessageList = ({ messages, currentUser }) => {
           <div className="w-12 h-12 border border-white/5 rounded-2xl flex items-center justify-center bg-white/[0.01]">
             <div className="w-1.5 h-1.5 bg-zinc-700 rounded-full animate-pulse"></div>
           </div>
-          <p className="text-[10px] uppercase tracking-[0.4em] font-medium font-mono text-center">
+          <p className="text-[12px] uppercase tracking-[0.4em] font-medium font-mono text-center">
             Awaiting Data Packet...<br/>
-            <span className="text-[8px] opacity-40">Zero-Link Established</span>
+            <span className="text-[10px] opacity-40">Zero-Link Established</span>
           </p>
         </div>
       ) : (
