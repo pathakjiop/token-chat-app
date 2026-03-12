@@ -1,255 +1,114 @@
-# Temporary Token Chat App
+# 🌑 Noir Chat
 
-A **privacy-focused temporary chat application** where two users can communicate using a **unique token**, without creating accounts or storing permanent chat history.
+A **premium, privacy-focused temporary chat application** designed for ephemeral conversations. Users can establish unique spectral links that vanish into the void upon termination.
 
-This project demonstrates a **full-stack architecture using React, Node.js, Express, and PostgreSQL**.
-
----
-
-# Features
-
-* Create a temporary chat room
-* Join a chat using a unique token
-* Send and receive messages
-* No user accounts required
-* Messages exist only during the active session
-* Automatic chat session deletion when users leave
+![Noir Chat Mockup](https://raw.githubusercontent.com/pathakjiop/token-chat-app/main/preview.png) *(Placeholder: You can add an actual image here later)*
 
 ---
 
-# Tech Stack
+## ✨ Features
 
-### Frontend
-
-* React
-* TailwindCSS
-* Axios / Fetch API
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* PostgreSQL
-
-### API Communication
-
-* REST APIs
-
-### Deployment (Optional)
-
-* Vercel (Frontend)
-* Railway / Render / VPS (Backend)
-* Supabase / PostgreSQL instance
+- **Dual Matrix Modes**:
+  - **Private**: Secure dual-link restricted to exactly 2 participants.
+  - **Group**: Open multi-matrix for unlimited participants.
+- **Zero Persistence**: No message history is stored permanently.
+- **No Accounts**: Join via unique tokens and temporary aliases.
+- **Manual Termination**: Use the "Purge Matrix" feature to instantly wipe all data for everyone in the session.
+- **Premium Aesthetics**: Warmer dark-mode design with fluid animations and responsive glassmorphism.
 
 ---
 
-# Project Structure
+## 🚀 Tech Stack
 
-```
-token-chat-app
-│
-├ client
-│   ├ components
-│   ├ pages
-│   ├ services
-│   ├ hooks
-│   └ App.jsx
-│
-├ server
-│   ├ routes
-│   ├ controllers
-│   ├ database
-│   ├ utils
-│   └ server.js
-│
-├ instruction.md
-├ architecture.md
-└ README.md
-```
+- **Frontend**: React, TailwindCSS, Lucide-React
+- **Backend**: Node.js, Express
+- **Database**: Supabase (PostgreSQL)
+- **Deployment**: Vercel (Client) + Render (Server)
 
 ---
 
-# How It Works
+## 🛠️ Local Setup
 
-1. A user creates a chat room.
-2. The system generates a **unique token**.
-3. Another user joins the room using that token.
-4. Both users can send and receive messages.
-5. Messages are stored temporarily.
-6. When both users leave the room, the session is deleted.
+### 1. Database Setup (Supabase)
+1. Create a project at [Supabase](https://supabase.com).
+2. Go to the **SQL Editor** and run the query found in `server/database/init.sql`.
+3. Get your `SUPABASE_URL` and `SUPABASE_ANON_KEY` from Project Settings > API.
 
----
-
-# API Endpoints
-
-### Create Chat Room
-
-```
-POST /create-room
-```
-
-Response
-
-```json
-{
-  "token": "AB12CD"
-}
-```
-
----
-
-### Join Chat Room
-
-```
-POST /join-room
-```
-
-Body
-
-```
-token
-username
-```
-
----
-
-### Send Message
-
-```
-POST /send-message
-```
-
-Body
-
-```
-token
-username
-message
-```
-
----
-
-### Fetch Messages
-
-```
-GET /messages/:token
-```
-
-Returns all messages for that chat room.
-
----
-
-### Delete Chat Session
-
-```
-DELETE /room/:token
-```
-
-Deletes all messages when the session ends.
-
----
-
-# Database Schema
-
-Table: `messages`
-
-| Column   | Type               |
-| -------- | ------------------ |
-| id       | SERIAL PRIMARY KEY |
-| token    | VARCHAR            |
-| username | VARCHAR            |
-| message  | TEXT               |
-| time     | TIMESTAMP          |
-
----
-
-# Development Setup
-
-## 1. Clone the Repository
-
-```
-git clone https://github.com/pathakjiop/token-chat-app
-cd token-chat-app
-```
-
----
-
-## 2. Setup Backend
-
-```
+### 2. Backend Setup
+```bash
 cd server
 npm install
 ```
-
-Create `.env`
-
-```
+Create a `.env` file in `/server`:
+```env
 PORT=5000
-DATABASE_URL=postgresql://user:password@localhost:5432/chatdb
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+Run: `npm start`
 
-Start backend server
-
-```
-npm start
-```
-
----
-
-## 3. Setup Frontend
-
-```
+### 3. Frontend Setup
+```bash
 cd client
 npm install
-npm run dev
 ```
+Create a `.env` file in `/client`:
+```env
+VITE_API_URL=http://localhost:5000
+```
+Run: `npm run dev`
 
 ---
 
-# Development Phases
+## 🌍 Hosting Guide
 
-1. Project setup
-2. Backend API development
-3. Frontend UI development
-4. API integration
-5. Testing
-6. Deployment
+### **1. Database (Supabase)**
+- Already set up during local steps. Ensure your tables match the latest `init.sql`.
 
----
+### **2. Backend (Render)**
+1. Sign in to [Render](https://render.com).
+2. Create a **New > Web Service**.
+3. Connect your GitHub repository.
+4. Settings:
+   - **Root Directory**: `server`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+5. Add **Environment Variables**:
+   - `SUPABASE_URL`: (Your URL)
+   - `SUPABASE_ANON_KEY`: (Your Key)
+   - `PORT`: `5000` (optional, Render handles it)
 
-# Testing
-
-Testing should include:
-
-* API testing using Postman or Insomnia
-* UI testing for responsiveness
-* Edge case testing
-* Session deletion validation
-
----
-
-# Future Improvements
-
-Possible upgrades:
-
-* Real-time messaging using WebSockets
-* End-to-end encryption
-* Multi-user chat rooms
-* Token expiration
-* File sharing
-* Message reactions
+### **3. Frontend (Vercel)**
+1. Sign in to [Vercel](https://vercel.com).
+2. Create a **New Project** and import your repository.
+3. Configure settings during the import:
+   - **Root Directory**: `client`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Add **Environment Variables**:
+   - `VITE_API_URL`: (The URL of your live Render backend)
+5. Deploy!
 
 ---
 
-# License
+## 📖 API Reference
 
-This project is for **educational and demonstration purposes**.
+### Rooms
+- `POST /create-room`: Initialize a matrix. Body: `{ "type": "private" | "group" }`
+- `POST /join-room`: Sync with a matrix. Body: `{ "token": "...", "username": "..." }`
+- `POST /leave-room`: Dissociate from matrix. Body: `{ "token": "...", "username": "..." }`
+- `DELETE /room/:token`: Terminate and purge matrix history.
+
+### Messages
+- `POST /send-message`: Transmit data. Body: `{ "token": "...", "username": "...", "message": "..." }`
+- `GET /messages/:token`: Retrieve spectral history.
 
 ---
 
-# Author
+## ⚖️ License
+Demonstration purposes only. Zero data persistence guaranteed.
 
-Built as a **full-stack learning project** demonstrating modern web application architecture.
+---
+
+## 👤 Author
+Developed as a high-fidelity ephemeral workspace project.
