@@ -23,12 +23,12 @@ const ChatBubble = ({ message, isOwnMessage }) => {
         </div>
         <div 
           className={`text-[9px] mt-4 font-black uppercase tracking-[0.3em] border-t pt-3 flex items-center justify-between
-            ${isOwnMessage ? 'text-zinc-500 border-black/5' : 'text-zinc-800 border-white/5'}
+            ${isOwnMessage ? 'text-zinc-600 border-black/5' : 'text-zinc-500 border-white/5'}
           `}
         >
           <div className="flex items-center gap-2">
-             <span className="opacity-40">UTC</span>
-             <span>{new Date(message.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+             <span className="opacity-60">UTC</span>
+             <span className={isOwnMessage ? 'text-zinc-700' : 'text-zinc-400'}>{new Date(message.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
           {isOwnMessage && (
               <div className="flex gap-1.5">

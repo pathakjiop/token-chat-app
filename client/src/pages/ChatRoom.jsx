@@ -216,73 +216,80 @@ const ChatRoom = () => {
       )}
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden lg:flex w-[400px] flex-col bg-[#080807] p-10 lg:p-12 space-y-12 border-l border-white/[0.02] backdrop-blur-3xl overflow-y-auto scrollbar-hide">
-        <div className="space-y-8">
-          <div className="space-y-2.5">
-             <h3 className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.5em] ml-2">Channel Matrix</h3>
+      <aside className="hidden lg:flex w-[380px] flex-col bg-[#080807] p-10 lg:p-12 space-y-12 border-l border-white/[0.03] backdrop-blur-3xl overflow-y-auto scrollbar-hide relative">
+        <div className="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+        
+        <div className="space-y-10">
+          <div className="space-y-4">
+             <div className="flex items-center justify-between px-2">
+                <h3 className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.6em]">Matrix Address</h3>
+                <div className="flex gap-1">
+                    <div className="w-1 h-1 bg-zinc-800 rounded-full"></div>
+                    <div className="w-1 h-1 bg-zinc-800 rounded-full animate-pulse"></div>
+                </div>
+             </div>
              <TokenDisplay token={token} />
           </div>
 
-          <div className="pt-10 border-t border-white/[0.03] flex items-center justify-between px-1">
-            <p className="text-[10px] text-zinc-800 font-black uppercase tracking-[0.5em] flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 bg-zinc-900 rounded-full"></span>
-              P1.1 — Noir.Chat
-            </p>
-            <div className="flex items-center gap-1.5">
-                <div className="w-1 h-1 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]"></div>
-                <span className="text-[9px] text-zinc-700 font-black uppercase tracking-widest">Secure</span>
-            </div>
-          </div>
-          
-          <button 
-            onClick={handleShare}
-            className="w-full flex items-center justify-center gap-4 bg-white/[0.015] hover:bg-white/[0.03] border border-white/5 text-zinc-500 hover:text-white h-[64px] rounded-[24px] font-black uppercase text-[11px] tracking-[0.4em] transition-all group active:scale-[0.98]"
-          >
-              <Share2 className="w-4 h-4 opacity-30 group-hover:opacity-100 transition-opacity" />
-              Transmit Link
-          </button>
+          <div className="p-1 border-t border-white/[0.03]"></div>
 
-          <div className="p-6 rounded-[28px] bg-white/[0.01] border border-white/5 flex items-center gap-5 group hover:border-white/10 transition-colors cursor-default">
-             <div className="w-12 h-12 rounded-[16px] bg-white/[0.03] flex items-center justify-center text-zinc-600 group-hover:text-zinc-200 transition-colors shadow-inner">
-                 {roomType === 'private' ? <User className="w-5 h-5" /> : <Users className="w-5 h-5" />}
-             </div>
-             <div>
-                 <p className="text-[13px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-white transition-colors">
-                     {roomType === 'private' ? 'Secure Dual Link' : 'Open Multi-Matrix'}
-                 </p>
-                 <p className="text-[10px] text-zinc-700 font-black uppercase tracking-widest mt-0.5 opacity-80">
-                     {roomType === 'private' ? 'Restricted' : 'Unlimited'}
-                 </p>
+          <div className="relative group cursor-default">
+             <div className="absolute inset-0 bg-white/[0.01] rounded-[30px] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+             <div className="relative p-7 rounded-[30px] bg-white/[0.02] border border-white/5 flex items-center gap-6 group hover:border-white/10 transition-all duration-500 shadow-2xl">
+                <div className="w-14 h-14 rounded-[20px] bg-black/40 border border-white/5 flex items-center justify-center text-zinc-700 group-hover:text-white transition-all shadow-inner relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.02] to-transparent"></div>
+                    {roomType === 'private' ? <User className="w-6 h-6 relative z-10" /> : <Users className="w-6 h-6 relative z-10" />}
+                </div>
+                <div>
+                    <p className="text-[14px] font-black uppercase tracking-[0.2em] text-zinc-300 group-hover:text-white transition-colors">
+                        {roomType === 'private' ? 'Dual Link' : 'Multi Matrix'}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                        <span className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded-md border border-white/5">PROTOCOL 1.1</span>
+                        <span className="w-1 h-1 bg-white/10 rounded-full"></span>
+                        <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">{roomType === 'private' ? 'SYNCED' : 'OPEN'}</span>
+                    </div>
+                </div>
              </div>
           </div>
         </div>
 
         <div className="flex-1 flex flex-col justify-end space-y-10">
-          <div className="space-y-6">
-            <h3 className="text-[10px] font-black text-zinc-800 uppercase tracking-[0.5em] ml-2">Security Protocol</h3>
-            <div className="p-8 rounded-[32px] bg-white/[0.01] border border-white/5 space-y-8">
-              <div className="flex items-start gap-5">
-                <div className="w-1.5 h-1.5 bg-zinc-800 rounded-full mt-2"></div>
-                <div className="space-y-1.5">
-                  <span className="text-zinc-500 font-black uppercase text-[10px] tracking-[0.2em] block">End-to-End Void</span>
-                  <p className="text-[13px] text-zinc-700 font-light leading-relaxed tracking-wider">
-                    Messages exist within current buffer. No central database.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-5">
-                <div className="w-1.5 h-1.5 bg-zinc-800 rounded-full mt-2"></div>
-                <div className="space-y-1.5">
-                  <span className="text-zinc-500 font-black uppercase text-[10px] tracking-[0.2em] block">Zero persistence</span>
-                  <p className="text-[13px] text-zinc-700 font-light leading-relaxed tracking-wider">
-                    Terminating the matrix expunges all cryptographic signatures.
-                  </p>
-                </div>
-              </div>
+          <div className="space-y-8">
+            <div className="flex items-center gap-4 px-2">
+               <div className="h-[1px] flex-1 bg-zinc-900"></div>
+               <h3 className="text-[10px] font-black text-zinc-800 uppercase tracking-[0.5em]">System Core</h3>
+               <div className="h-[1px] flex-1 bg-zinc-900"></div>
+            </div>
+            
+            <div className="space-y-4">
+               {[
+                 { label: 'E2E VOID', desc: 'Ephemeral temporal buffer.', icon: Lock },
+                 { label: 'ZERO TRACE', desc: 'Automated session expunging.', icon: Zap }
+               ].map((item, idx) => (
+                 <div key={idx} className="flex items-start gap-6 p-6 rounded-[28px] bg-white/[0.01] border border-white/5 hover:bg-white/[0.02] transition-colors group">
+                    <item.icon className="w-4 h-4 text-zinc-800 mt-1 group-hover:text-zinc-500 transition-colors" />
+                    <div className="space-y-1">
+                        <span className="text-zinc-500 font-black uppercase text-[10px] tracking-[0.3em] block">{item.label}</span>
+                        <p className="text-[13px] text-zinc-700 font-light tracking-wide">{item.desc}</p>
+                    </div>
+                 </div>
+               ))}
             </div>
           </div>
 
-          
+          <div className="p-8 rounded-[35px] bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.03] space-y-4">
+             <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                   <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)] animate-pulse"></div>
+                   <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Matrix Live</span>
+                </div>
+                <span className="text-[9px] font-mono text-zinc-700">SRV-7 // AUTH</span>
+             </div>
+             <p className="text-[11px] text-zinc-600 font-medium leading-relaxed italic opacity-60">
+                Encrypted spectral handshake verified. Session is ephemeral.
+             </p>
+          </div>
         </div>
       </aside>
     </div>
