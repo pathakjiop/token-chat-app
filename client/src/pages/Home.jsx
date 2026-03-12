@@ -2,28 +2,30 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createRoom, joinRoom } from '../services/api';
 import JoinRoomForm from '../components/JoinRoomForm';
-import { MessageSquarePlus, User, Users } from 'lucide-react';
+import { Shield, Zap, Lock, Users, User, ArrowRight, Sparkles } from 'lucide-react';
 
 const Home = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('join');
-  const [roomType, setRoomType] = useState('group'); // 'private' or 'group'
+  const [activeTab, setActiveTab] = useState('create');
+  const [roomType, setRoomType] = useState('private');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [creatorName, setCreatorName] = useState('');
+  const [error, setError] = useState(null);
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
-    if (!creatorName.trim()) return;
-    
+    if (!username.trim()) {
+      setError('Identity required to initialize.');
+      return;
+    }
     setIsLoading(true);
-    setError('');
+    setError(null);
     try {
       const { token } = await createRoom(roomType);
-      // Directly join the room after creation
-      await joinRoom(token, creatorName.trim());
-      navigate(`/chat/${token}`, { state: { username: creatorName.trim(), roomType } });
+      // Wait for join to complete before navigating
+      await joinRoom(token, username.trim());
+      navigate(`/chat/${token}`, { state: { username: username.trim(), roomType } });
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to materialize session.');
+      setError('Matrix initialization failed. Try again.');
     } finally {
       setIsLoading(false);
     }
@@ -31,143 +33,157 @@ const Home = () => {
 
   const handleJoinRoom = async ({ token, username }) => {
     setIsLoading(true);
-    setError('');
+    setError(null);
     try {
-      const data = await joinRoom(token, username);
-      navigate(`/chat/${token}`, { state: { username, roomType: data.roomType } });
+      const { roomType: joinedRoomType } = await joinRoom(token, username);
+      navigate(`/chat/${token}`, { state: { username, roomType: joinedRoomType } });
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to join room. Check token.');
+      setError(err.response?.data?.message || 'Spectral link failed.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-fade-in bg-black">
-      <div className="w-full max-w-[420px] premium-glass rounded-[32px] overflow-hidden shadow-2xl relative">
-        {/* Glow effect */}
-        <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/5 rounded-full blur-[80px]"></div>
-        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-white/5 rounded-full blur-[80px]"></div>
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-outfit">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/[0.02] blur-[120px] rounded-full animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/[0.01] blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
 
-        <div className="p-10 text-center relative z-10">
-          <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-            <MessageSquarePlus className="w-10 h-10 text-black fill-current" />
+      <div className="w-full max-w-[540px] z-10 space-y-12 animate-fade-in font-outfit">
+        {/* Branding Area */}
+        <div className="text-center space-y-6">
+          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/[0.03] border border-white/5 backdrop-blur-md mb-4">
+             <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
+             <span className="text-[12px] font-black uppercase tracking-[0.3em] text-zinc-500">Noir.Chat Protocol v1.1</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-3 text-white font-outfit uppercase">Noir Chat</h1>
-          <p className="text-zinc-400 text-[12px] font-black tracking-[0.3em] uppercase">Ephemeral Void Workspace</p>
+          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter text-white leading-[0.9]">
+            THE <span className="text-zinc-600">VOID</span><br/>BEYOND.
+          </h1>
+          <p className="text-[16px] lg:text-[18px] text-zinc-500 font-light max-w-[380px] mx-auto leading-relaxed uppercase tracking-widest">
+            Ephemeral connectivity. <br/>Absolute spectral link.
+          </p>
         </div>
 
-        <div className="px-10 pb-10 relative z-10">
-          <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 mb-8">
-            <button
-              onClick={() => setActiveTab('join')}
-              className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-500 ${
-                activeTab === 'join' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'
-              }`}
-            >
-              Join
-            </button>
-            <button
-              onClick={() => setActiveTab('create')}
-              className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-500 ${
-                activeTab === 'create' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'
-              }`}
-            >
-              Genesis
-            </button>
-          </div>
-
-          {error && (
-            <div className="mb-6 p-4 bg-red-500/10 text-red-400 text-xs rounded-xl border border-red-500/20 animate-fade-in flex items-center gap-3">
-              <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-              {error}
-            </div>
-          )}
-
-          {activeTab === 'join' ? (
-            <JoinRoomForm onJoin={handleJoinRoom} isLoading={isLoading} />
-          ) : (
-            <div className="space-y-6">
-              <p className="text-zinc-400 text-[12px] leading-relaxed font-light text-center px-2">
-                Establish a unique spectral link. All traces vanish upon exit.
-              </p>
-
-              <div className="space-y-4">
-                <label className="block text-[12px] font-bold text-zinc-500 uppercase tracking-widest ml-1">
-                  Matrix Configuration
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                    <button 
-                        onClick={() => setRoomType('private')}
-                        className={`p-4 rounded-2xl border transition-all duration-300 flex flex-col items-center gap-2 ${
-                            roomType === 'private' 
-                            ? 'bg-white/10 border-white/40 text-white' 
-                            : 'bg-black/20 border-white/5 text-zinc-500 hover:border-white/20'
-                        }`}
-                    >
-                        <User className="w-5 h-5" />
-                        <span className="text-[12px] font-bold uppercase tracking-widest">Private</span>
-                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Dual Sync Only</span>
-                    </button>
-                    <button 
-                        onClick={() => setRoomType('group')}
-                        className={`p-4 rounded-2xl border transition-all duration-300 flex flex-col items-center gap-2 ${
-                            roomType === 'group' 
-                            ? 'bg-white/10 border-white/40 text-white' 
-                            : 'bg-black/20 border-white/5 text-zinc-500 hover:border-white/20'
-                        }`}
-                    >
-                        <Users className="w-5 h-5" />
-                        <span className="text-[12px] font-bold uppercase tracking-widest">Group</span>
-                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Infinite Link</span>
-                    </button>
-                </div>
-              </div>
-              
-              <div className="group">
-                <label className="block text-[12px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
-                  Genesis Alias
-                </label>
-                <input
-                  type="text"
-                  value={creatorName}
-                  onChange={(e) => setCreatorName(e.target.value)}
-                  placeholder="EX: NEURON"
-                  className="premium-input w-full h-[56px] rounded-2xl px-6 text-zinc-300 placeholder:text-zinc-700 font-light"
-                />
-              </div>
-
+        {/* Matrix Console */}
+        <div className="premium-card rounded-[40px] p-2 lg:p-3 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)]">
+          <div className="bg-black/40 backdrop-blur-xl rounded-[32px] p-8 lg:p-12 space-y-10">
+            {/* Control Panel Tabs */}
+            <div className="flex bg-white/[0.03] p-1.5 rounded-2xl border border-white/5">
               <button
-                onClick={handleCreateRoom}
-                disabled={isLoading || !creatorName.trim()}
-                className="premium-button w-full h-[56px] rounded-2xl flex items-center justify-center space-x-3 text-[13px] uppercase tracking-[0.2em] font-bold"
+                onClick={() => setActiveTab('create')}
+                className={`flex-1 py-4 rounded-xl text-[12px] font-black uppercase tracking-[0.2em] transition-all
+                  ${activeTab === 'create' ? 'bg-white text-black shadow-xl scale-[1.02]' : 'text-zinc-500 hover:text-white'}`}
               >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-1 h-1 bg-black rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-black rounded-full animate-bounce [animation-delay:-.3s]"></div>
-                    <div className="w-1 h-1 bg-black rounded-full animate-bounce [animation-delay:-.5s]"></div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="w-2 h-2 bg-black rounded-full animate-ping"></div>
-                    <span>Initialize Session</span>
-                  </>
-                )}
+                Genesis
+              </button>
+              <button
+                onClick={() => setActiveTab('join')}
+                className={`flex-1 py-4 rounded-xl text-[12px] font-black uppercase tracking-[0.2em] transition-all
+                  ${activeTab === 'join' ? 'bg-white text-black shadow-xl scale-[1.02]' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Sync
               </button>
             </div>
-          )}
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 px-6 py-4 rounded-2xl text-[13px] text-red-400 font-bold uppercase tracking-widest flex items-center gap-3 italic">
+                <Shield className="w-4 h-4" />
+                {error}
+              </div>
+            )}
+
+            {activeTab === 'create' ? (
+              <div className="space-y-10 animate-fade-in">
+                {/* Room Configuration */}
+                <div className="space-y-6">
+                  <label className="block text-[12px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    Matrix Configuration
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => setRoomType('private')}
+                      className={`group relative p-6 rounded-[24px] border transition-all text-left overflow-hidden h-[120px] flex flex-col justify-center
+                        ${roomType === 'private' ? 'bg-white/5 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'bg-transparent border-white/5 opacity-40 hover:opacity-100'}`}
+                    >
+                      <User className={`w-5 h-5 mb-2 ${roomType === 'private' ? 'text-white' : 'text-zinc-600'}`} />
+                      <p className="text-[12px] font-black uppercase tracking-widest text-white mb-0.5">Dual Link</p>
+                      <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-tight">Private (2 Entities)</p>
+                      {roomType === 'private' && <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div>}
+                    </button>
+                    <button
+                      onClick={() => setRoomType('group')}
+                      className={`group relative p-6 rounded-[24px] border transition-all text-left overflow-hidden h-[120px] flex flex-col justify-center
+                        ${roomType === 'group' ? 'bg-white/5 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'bg-transparent border-white/5 opacity-40 hover:opacity-100'}`}
+                    >
+                      <Users className={`w-5 h-5 mb-2 ${roomType === 'group' ? 'text-white' : 'text-zinc-600'}`} />
+                      <p className="text-[12px] font-black uppercase tracking-widest text-white mb-0.5">Multi Matrix</p>
+                      <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-tight">Open Room</p>
+                      {roomType === 'group' && <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div>}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <label className="block text-[12px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    Your Identity
+                  </label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="ENTER ALIAS..."
+                    className="premium-input w-full h-[64px] rounded-[24px] px-8 text-white text-lg font-light tracking-widest placeholder:text-zinc-800"
+                  />
+                </div>
+
+                <button
+                  onClick={handleCreateRoom}
+                  disabled={isLoading || !username.trim()}
+                  className="premium-button w-full h-[64px] rounded-[24px] group flex items-center justify-center gap-3 active:scale-95 shadow-2xl"
+                >
+                  {isLoading ? (
+                    <Zap className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <span>Initialize Link</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="animate-fade-in">
+                <JoinRoomForm onJoin={handleJoinRoom} isLoading={isLoading} />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      
-      <div className="mt-12 text-center opacity-40 hover:opacity-100 transition-opacity duration-700">
-        <p className="text-[12px] uppercase tracking-[0.3em] font-medium text-white/60">
-          Zero Persistence Architecture &bull; End-to-End Void
-        </p>
+
+        {/* Footnotes */}
+        <div className="flex flex-col items-center gap-8 pt-8">
+            <div className="flex items-center gap-12">
+                <div className="flex flex-col items-center gap-3 group cursor-default">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/[0.03] border border-white/5 transition-all group-hover:border-white/20 group-hover:bg-white/[0.05] shadow-lg">
+                        <Lock className="w-5 h-5 text-zinc-600 group-hover:text-white" />
+                    </div>
+                    <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em]">End-to-End Void</span>
+                </div>
+                <div className="flex flex-col items-center gap-3 group cursor-default">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/[0.03] border border-white/5 transition-all group-hover:border-white/20 group-hover:bg-white/[0.05] shadow-lg">
+                        <Zap className="w-5 h-5 text-zinc-600 group-hover:text-white" />
+                    </div>
+                    <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em]">Zero Trace</span>
+                </div>
+            </div>
+            
+            <p className="text-[12px] text-zinc-700 font-medium uppercase tracking-[0.5em] text-center max-w-[300px] leading-loose opacity-60">
+               Secure ephemeral workspace designed by <br/> <span className="text-zinc-400">Atmospheric Logic</span>
+            </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Home;
-
