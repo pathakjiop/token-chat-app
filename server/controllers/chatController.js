@@ -1,4 +1,4 @@
-import pool from '../database/db.js';
+import supabase from '../database/db.js';
 import { generateToken } from '../utils/tokenGenerator.js';
 
 // Create a new chat room
@@ -39,11 +39,15 @@ export const sendMessage = async (req, res) => {
   }
 
   try {
-    const newMsg = await pool.query(
-      'INSERT INTO messages (token, username, message) VALUES ($1, $2, $3) RETURNING *',
-      [token, username, message]
-    );
-    res.status(201).json(newMsg.rows[0]);
+    const { data: newMsg, error } = await supabase
+      .from('messages')
+      .insert([{ token, username, message }])
+      .select()
+      .single();
+
+    if (error) throw error;
+      
+    res.status(201).json(newMsg);
   } catch (error) {
     console.error('Error sending message:', error);
     res.status(500).json({ error: 'Failed to send message' });
@@ -59,11 +63,15 @@ export const getMessages = async (req, res) => {
   }
 
   try {
-    const messages = await pool.query(
-      'SELECT id, token, username, message, time FROM messages WHERE token = $1 ORDER BY time ASC',
-      [token]
-    );
-    res.status(200).json(messages.rows);
+    const { data: messages, error } = await supabase
+      .from('messages')
+      .select('id, token, username, message, time')
+      .eq('token', token)
+      .order('time', { ascending: true });
+
+    if (error) throw error;
+
+    res.status(200).json(messages);
   } catch (error) {
     console.error('Error fetching messages:', error);
     res.status(500).json({ error: 'Failed to fetch messages' });
@@ -79,7 +87,13 @@ export const deleteRoom = async (req, res) => {
   }
 
   try {
-    await pool.query('DELETE FROM messages WHERE token = $1', [token]);
+    const { error } = await supabase
+      .from('messages')
+      .delete()
+      .eq('token', token);
+
+    if (error) throw error;
+
     res.status(200).json({ message: 'Room deleted successfully' });
   } catch (error) {
     console.error('Error deleting room:', error);
