@@ -21,7 +21,7 @@ const MessageInput = ({ onSendMessage }) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Transmit message..."
-            className="premium-input w-full h-[60px] rounded-[18px] pl-8 pr-16 text-[14px] font-light tracking-wide placeholder:text-zinc-700"
+            className="premium-input w-full h-[60px] rounded-[18px] pl-8 pr-16 text-[16px] font-light tracking-wide placeholder:text-zinc-700"
           />
           <div className="absolute left-0 bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-opacity opacity-0 group-focus-within:opacity-100"></div>
         </div>
