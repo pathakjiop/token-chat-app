@@ -222,6 +222,17 @@ const ChatRoom = () => {
              <h3 className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.5em] ml-2">Channel Matrix</h3>
              <TokenDisplay token={token} />
           </div>
+
+          <div className="pt-10 border-t border-white/[0.03] flex items-center justify-between px-1">
+            <p className="text-[10px] text-zinc-800 font-black uppercase tracking-[0.5em] flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 bg-zinc-900 rounded-full"></span>
+              P1.1 — Noir.Chat
+            </p>
+            <div className="flex items-center gap-1.5">
+                <div className="w-1 h-1 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]"></div>
+                <span className="text-[9px] text-zinc-700 font-black uppercase tracking-widest">Secure</span>
+            </div>
+          </div>
           
           <button 
             onClick={handleShare}
@@ -271,16 +282,7 @@ const ChatRoom = () => {
             </div>
           </div>
 
-          <div className="pt-10 border-t border-white/[0.03] flex items-center justify-between px-1">
-            <p className="text-[10px] text-zinc-800 font-black uppercase tracking-[0.5em] flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 bg-zinc-900 rounded-full"></span>
-              P1.1 — Noir.Chat
-            </p>
-            <div className="flex items-center gap-1.5">
-                <div className="w-1 h-1 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]"></div>
-                <span className="text-[9px] text-zinc-700 font-black uppercase tracking-widest">Secure</span>
-            </div>
-          </div>
+          
         </div>
       </aside>
     </div>
