@@ -17,10 +17,10 @@ const TokenDisplay = ({ token }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full"></div>
-          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Signal Origin</span>
+          <span className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.2em]">Signal Origin</span>
         </div>
         {copied && (
-          <span className="text-[9px] font-bold text-white uppercase tracking-widest animate-pulse">Copied to HUD</span>
+          <span className="text-[10px] font-bold text-white uppercase tracking-widest animate-pulse">Copied to HUD</span>
         )}
       </div>
       <div 
@@ -42,3 +42,4 @@ const TokenDisplay = ({ token }) => {
 };
 
 export default TokenDisplay;
+
