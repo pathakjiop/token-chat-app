@@ -9,16 +9,20 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState('join');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [creatorName, setCreatorName] = useState('');
 
   const handleCreateRoom = async () => {
+    if (!creatorName.trim()) return;
+    
     setIsLoading(true);
     setError('');
     try {
       const { token } = await createRoom();
-      setActiveTab('join');
-      alert(`Room created! Your token is: ${token}. Please enter a username to join.`);
+      // Directly join the room after creation
+      await joinRoom(token, creatorName.trim());
+      navigate(`/chat/${token}`, { state: { username: creatorName.trim() } });
     } catch (err) {
-      setError('Failed to create room. Please try again.');
+      setError(err.response?.data?.error || 'Failed to materialize session.');
     } finally {
       setIsLoading(false);
     }
@@ -44,8 +48,8 @@ const Home = () => {
           <div className="w-20 h-20 bg-white rounded-[24px] flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
             <MessageSquarePlus className="w-10 h-10 text-black fill-current" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-3 text-white">NOIR.CHAT</h1>
-          <p className="text-zinc-400 text-sm font-light tracking-widest uppercase">Ephemeral & Absolute</p>
+          <h1 className="text-4xl font-bold tracking-tight mb-3 text-white font-outfit uppercase">Noir Chat</h1>
+          <p className="text-zinc-400 text-[10px] font-black tracking-[0.3em] uppercase">Ephemeral Void Workspace</p>
         </div>
 
         <div className="px-10 pb-10">
@@ -78,17 +82,41 @@ const Home = () => {
           {activeTab === 'join' ? (
             <JoinRoomForm onJoin={handleJoinRoom} isLoading={isLoading} />
           ) : (
-            <div className="text-center py-4">
-              <p className="text-zinc-400 mb-10 text-sm leading-relaxed font-light">
-                Generate a unique spectral token to initiate a void-encrypted workspace. All traces vanish upon exit.
+            <div className="space-y-6">
+              <p className="text-zinc-400 text-[12px] leading-relaxed font-light text-center px-2">
+                Establish a unique spectral link. All traces vanish upon exit.
               </p>
+              
+              <div className="group">
+                <label className="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest ml-1">
+                  Genesis Alias
+                </label>
+                <input
+                  type="text"
+                  value={creatorName}
+                  onChange={(e) => setCreatorName(e.target.value)}
+                  placeholder="EX: NEURON"
+                  className="premium-input w-full h-[56px] rounded-2xl px-6 text-zinc-300 placeholder:text-zinc-700 font-light"
+                />
+              </div>
+
               <button
                 onClick={handleCreateRoom}
-                disabled={isLoading}
-                className="premium-button w-full h-[56px] rounded-2xl flex items-center justify-center space-x-3"
+                disabled={isLoading || !creatorName.trim()}
+                className="premium-button w-full h-[56px] rounded-2xl flex items-center justify-center space-x-3 text-[13px] uppercase tracking-[0.2em] font-bold"
               >
-                <div className="w-2 h-2 bg-black rounded-full animate-ping"></div>
-                <span>{isLoading ? 'Materializing...' : 'Initialize Session'}</span>
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-black rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-black rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                    <div className="w-1 h-1 bg-black rounded-full animate-bounce [animation-delay:-.5s]"></div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="w-2 h-2 bg-black rounded-full animate-ping"></div>
+                    <span>Initialize Session</span>
+                  </>
+                )}
               </button>
             </div>
           )}
