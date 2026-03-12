@@ -1,6 +1,22 @@
 import React from 'react';
 
 const ChatBubble = ({ message, isOwnMessage }) => {
+  const isSystem = message.username === 'SYSTEM';
+
+  if (isSystem) {
+    return (
+      <div className="flex justify-center w-full my-6 animate-fade-in">
+        <div className="flex items-center gap-4 px-6 py-2 rounded-full border border-white/[0.02] bg-white/[0.01] backdrop-blur-sm">
+           <div className="w-1 h-1 bg-zinc-800 rounded-full animate-pulse"></div>
+           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-700 italic">
+             {message.message}
+           </p>
+           <div className="w-1 h-1 bg-zinc-800 rounded-full animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`flex w-full ${isOwnMessage ? 'justify-end' : 'justify-start'} animate-fade-in group`}>
       <div 
@@ -42,5 +58,6 @@ const ChatBubble = ({ message, isOwnMessage }) => {
     </div>
   );
 };
+
 
 export default ChatBubble;

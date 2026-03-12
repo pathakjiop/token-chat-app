@@ -65,6 +65,15 @@ export const joinRoom = async (req, res) => {
         await supabase
           .from('participants')
           .insert([{ token, username }]);
+        
+        // Log integration event
+        await supabase
+          .from('messages')
+          .insert([{ 
+            token, 
+            username: 'SYSTEM', 
+            message: `${username} integrated into the matrix` 
+          }]);
       }
     }
 
@@ -141,6 +150,15 @@ export const leaveRoom = async (req, res) => {
             .eq('username', username);
 
         if (error) throw error;
+        
+        // Log severance event
+        await supabase
+          .from('messages')
+          .insert([{ 
+            token, 
+            username: 'SYSTEM', 
+            message: `${username} severed the link` 
+          }]);
 
         // Count remaining participants
         const { count, error: countError } = await supabase
