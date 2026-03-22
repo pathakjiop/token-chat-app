@@ -2,8 +2,6 @@
 
 A **premium, privacy-focused temporary chat application** designed for ephemeral conversations. Users can establish unique spectral links that vanish into the void upon termination.
 
-![Noir Chat Mockup](https://raw.githubusercontent.com/pathakjiop/token-chat-app/main/preview.png) *(Placeholder: You can add an actual image here later)*
-
 ---
 
 ## ✨ Features
